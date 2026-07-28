@@ -7,7 +7,7 @@ using namespace std;
 Graph::Graph(){}
 
 int Graph::FindVertexIndex(int id){
-    for (int i = 0; i < vertices.size(); i++){
+    for (size_t i = 0; i < vertices.size(); i++){
         if (vertices[i].id == id){
             return i;
         }
@@ -61,7 +61,7 @@ void Graph::printGraph()
     for(Vertex &vertex : vertices){
         cout<<vertex.id<<" -> ";
         for(Edge &edge : vertex.edges){
-            cout <<"(" << edge.destination << "," <<edge.weight << ")";
+            cout <<"(" << edge.destination << ", " <<edge.weight << ") ";
         }
         cout<<endl;
     }
