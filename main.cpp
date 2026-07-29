@@ -1,40 +1,40 @@
 #include <iostream>
 
-#include "DataStructures/MinHeap.h"
+#include "Models/GameState.h"
 
 using namespace std;
 
 int main()
 {
-    MinHeap<int> heap;
+    Player player(1,10);
 
-    heap.Insert(10,5);
+    Wolf wolf(1,50);
 
-    heap.Insert(20,2);
+    GameState state(player,wolf);
 
-    heap.Insert(30,9);
+    cout
+        << "Player Position : "
+        << state.getPlayer().getPosition()
+        << endl;
 
-    heap.Insert(40,1);
+    cout
+        << "Wolf Position : "
+        << state.getWolf().getPosition()
+        << endl;
 
-    heap.Insert(50,7);
+    state.increaseMove();
 
-    cout<<"Heap : ";
+    state.increaseMove();
 
-    heap.Print();
+    cout
+        << "Moves : "
+        << state.getMoveCount()
+        << endl;
 
-    cout<<endl;
+    state.finishGame();
 
-    while(!heap.IsEmpty())
-    {
-        HeapNode<int> node =
-            heap.ExtractMin();
-
-        cout
-            << node.data
-            << " "
-            << node.priority
-            << endl;
-    }
-
-    return 0;
+    cout
+        << "Finished : "
+        << state.isFinished()
+        << endl;
 }

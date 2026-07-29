@@ -11,8 +11,12 @@ add_executable(HoodQuest
 
     Models/Edge.cpp
     Models/Vertex.cpp
+    Models/Player.cpp
+    Models/Wolf.cpp
+    Models/GameState.cpp
 
     DataStructures/Graph.cpp
 
     Algorithms/BFS.cpp
+    Algorithms/Dijkstra.cpp
 )

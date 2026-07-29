@@ -80,3 +80,30 @@ std::vector<int> Dijkstra::shortestPath(
 
     return path;
 }
+
+int Dijkstra::pathCost(
+    Graph& graph,
+    const std::vector<int>& path)
+{
+    if(path.empty())
+        return 0;
+
+    int total=0;
+
+    for(size_t i=0;i<path.size()-1;i++)
+    {
+        std::vector<Edge> neighbors=
+            graph.getNeighbors(path[i]);
+
+        for(const Edge& edge : neighbors)
+        {
+            if(edge.destination==path[i+1])
+            {
+                total+=edge.weight;
+                break;
+            }
+        }
+    }
+
+    return total;
+}
