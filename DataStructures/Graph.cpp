@@ -55,6 +55,18 @@ std::vector<Edge> Graph::getNeighbors(int id)
     return vertex->edges;
 }
 
+std::vector<int> Graph::getVertexIds()
+{
+    std::vector<int> ids;
+
+    for(Vertex &vertex : vertices)
+    {
+        ids.push_back(vertex.id);
+    }
+
+    return ids;
+}
+
 void Graph::printGraph()
 {
     cout<<"----------- Graph -----------"<<endl;
@@ -67,4 +79,3 @@ void Graph::printGraph()
     }
     cout<<"-----------------------------"<<endl;
 }
-

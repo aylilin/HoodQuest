@@ -1,40 +1,40 @@
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
 
-#include "Models/GameState.h"
-
-using namespace std;
+#include "DataStructures/Graph.h"
+#include "Game/Menu.h"
 
 int main()
 {
-    Player player(1,10);
+    srand(static_cast<unsigned int>(time(nullptr)));
 
-    Wolf wolf(1,50);
+  
+    Graph graph;
 
-    GameState state(player,wolf);
+    for(int i = 0; i <= 8; i++)
+    {
+        graph.addVertex(i);
+    }
 
-    cout
-        << "Player Position : "
-        << state.getPlayer().getPosition()
-        << endl;
+    graph.addEdge(0, 1, 3);
+    graph.addEdge(0, 2, 2);
+    graph.addEdge(1, 3, 2);
+    graph.addEdge(2, 3, 4);
+    graph.addEdge(2, 4, 5);
+    graph.addEdge(3, 5, 3);
+    graph.addEdge(4, 5, 1);
+    graph.addEdge(5, 6, 2);
+    graph.addEdge(6, 7, 3);
+    graph.addEdge(4, 7, 6);
+    graph.addEdge(7, 8, 2);
+    graph.addEdge(6, 8, 4);
 
-    cout
-        << "Wolf Position : "
-        << state.getWolf().getPosition()
-        << endl;
+    int goalVertex = 8;
 
-    state.increaseMove();
+    Menu menu(graph, goalVertex);
 
-    state.increaseMove();
+    menu.run();
 
-    cout
-        << "Moves : "
-        << state.getMoveCount()
-        << endl;
-
-    state.finishGame();
-
-    cout
-        << "Finished : "
-        << state.isFinished()
-        << endl;
+    return 0;
 }

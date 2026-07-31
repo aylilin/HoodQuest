@@ -16,5 +16,6 @@ public:
     bool containsVertex(int id);
     Vertex* getVertex(int id);
     std::vector<Edge> getNeighbors(int id);
+    std::vector<int> getVertexIds();
     void printGraph();
 };

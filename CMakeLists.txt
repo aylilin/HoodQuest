@@ -14,9 +14,15 @@ add_executable(HoodQuest
     Models/Player.cpp
     Models/Wolf.cpp
     Models/GameState.cpp
+    Models/Dice.cpp
+    Models/Item.cpp
 
     DataStructures/Graph.cpp
 
     Algorithms/BFS.cpp
     Algorithms/Dijkstra.cpp
+    Algorithms/AStar.cpp
+
+    Game/GameEngine.cpp
+    Game/Menu.cpp
 )
