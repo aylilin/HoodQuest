@@ -1,38 +1,36 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include <map>
+#include <string>
 
 #include "DataStructures/Graph.h"
+#include "IO/FileManager.h"
 #include "Game/Menu.h"
 
 int main()
 {
     srand(static_cast<unsigned int>(time(nullptr)));
 
-  
     Graph graph;
 
-    for(int i = 0; i <= 8; i++)
+    if(!FileManager::loadGraph("Maps/graph.txt", graph))
     {
-        graph.addVertex(i);
+        std::cerr << "Error: could not load the map from Maps/graph.txt." << std::endl;
+        return 1;
     }
 
-    graph.addEdge(0, 1, 3);
-    graph.addEdge(0, 2, 2);
-    graph.addEdge(1, 3, 2);
-    graph.addEdge(2, 3, 4);
-    graph.addEdge(2, 4, 5);
-    graph.addEdge(3, 5, 3);
-    graph.addEdge(4, 5, 1);
-    graph.addEdge(5, 6, 2);
-    graph.addEdge(6, 7, 3);
-    graph.addEdge(4, 7, 6);
-    graph.addEdge(7, 8, 2);
-    graph.addEdge(6, 8, 4);
+    std::map<int,std::string> labels = {
+        {0,  "A"}, {1,  "B"}, {2,  "C"}, {3,  "D"}, {4,  "E"},
+        {5,  "F"}, {6,  "G"}, {7,  "J"}, {8,  "K"}, {9,  "M"},
+        {10, "O"}, {11, "P"}, {12, "Q"}, {13, "R"}, {14, "S"},
+        {15, "T"}, {16, "U"}, {17, "V"}, {18, "W"}
+    };
 
-    int goalVertex = 8;
+   
+    int goalVertex = 17;
 
-    Menu menu(graph, goalVertex);
+    Menu menu(graph, goalVertex, labels);
 
     menu.run();
 

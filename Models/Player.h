@@ -7,10 +7,6 @@ private :
     int currentPosition;
     int score;
 
-    bool basket;
-    bool flower;
-    bool key;
-
 public :
     Player();
 
@@ -29,18 +25,4 @@ public :
     void addScore(int value);
 
     void resetScore();
-
-    void collectBasket();
-
-    void collectFlower();
-
-    void collectKey();
-
-    bool hasBasket() const;
-
-    bool hasFlower() const;
-
-    bool hasKey() const;
-
-    void resetItems();
 };

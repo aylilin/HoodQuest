@@ -15,7 +15,6 @@ add_executable(HoodQuest
     Models/Wolf.cpp
     Models/GameState.cpp
     Models/Dice.cpp
-    Models/Item.cpp
 
     DataStructures/Graph.cpp
 
@@ -25,4 +24,7 @@ add_executable(HoodQuest
 
     Game/GameEngine.cpp
     Game/Menu.cpp
+    Game/ScoreManager.cpp
+
+    IO/FileManager.cpp
 )

@@ -7,10 +7,6 @@ Player::Player()
     currentPosition = 0;
 
     score = 0;
-
-    basket = false;
-    flower = false;
-    key = false;
 }
 
 Player::Player(int id, int startPosition)
@@ -20,10 +16,6 @@ Player::Player(int id, int startPosition)
     currentPosition = startPosition;
 
     score = 0;
-
-    basket = false;
-    flower = false;
-    key = false;
 }
 
 void Player::move(int destination)
@@ -59,41 +51,4 @@ void Player::addScore(int value)
 void Player::resetScore()
 {
     score = 0;
-}
-
-void Player::collectBasket()
-{
-    basket = true;
-}
-
-void Player::collectFlower()
-{
-    flower = true;
-}
-
-void Player::collectKey()
-{
-    key = true;
-}
-
-bool Player::hasBasket() const
-{
-    return basket;
-}
-
-bool Player::hasFlower() const
-{
-    return flower;
-}
-
-bool Player::hasKey() const
-{
-    return key;
-}
-
-void Player::resetItems()
-{
-    basket = false;
-    flower = false;
-    key = false;
 }
