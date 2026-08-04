@@ -5,10 +5,34 @@
 
 #include <map>
 #include <algorithm>
+#include <climits>
 
 namespace
-{ 
-    std::map<int,int> computeHeuristic(Graph& graph, int goal)
+{
+    int minEdgeWeight(Graph& graph)
+    {
+        int minWeight = INT_MAX;
+
+        std::vector<int> ids = graph.getVertexIds();
+
+        for(int id : ids)
+        {
+            std::vector<Edge> neighbors = graph.getNeighbors(id);
+
+            for(const Edge& edge : neighbors)
+            {
+                if(edge.weight < minWeight)
+                    minWeight = edge.weight;
+            }
+        }
+
+        if(minWeight == INT_MAX)
+            return 1;
+
+        return minWeight;
+    }
+
+    std::map<int,int> computeHopDistance(Graph& graph, int goal)
     {
         std::map<int,int> hopDistance;
 
@@ -46,6 +70,22 @@ namespace
         }
 
         return hopDistance;
+    }
+
+    std::map<int,int> computeHeuristic(Graph& graph, int goal)
+    {
+        std::map<int,int> hopDistance = computeHopDistance(graph, goal);
+
+        int scale = minEdgeWeight(graph);
+
+        std::map<int,int> heuristic;
+
+        for(const auto& entry : hopDistance)
+        {
+            heuristic[entry.first] = entry.second * scale;
+        }
+
+        return heuristic;
     }
 }
 

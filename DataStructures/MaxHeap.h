@@ -2,17 +2,28 @@
 
 #include <vector>
 #include <stdexcept>
-#include<iostream>
+#include <iostream>
 
 #include "HeapNode.h"
+#include "HashTable.h"
 
 template<typename T>
 class MaxHeap
 {
 private:
+
     std::vector<HeapNode<T>> heap;
 
-private :
+    HashTable<T,int> position;
+
+    void swapNodes(int a, int b)
+    {
+        std::swap(heap[a], heap[b]);
+
+        position.Insert(heap[a].data, a);
+        position.Insert(heap[b].data, b);
+    }
+
     void HeapifyUp(int index)
     {
         while(index > 0)
@@ -22,7 +33,7 @@ private :
             if(heap[parent].priority >= heap[index].priority)
                 break;
 
-            std::swap(heap[parent], heap[index]);
+            swapNodes(parent, index);
 
             index = parent;
         }
@@ -38,13 +49,13 @@ private :
 
             int largest = index;
 
-            if(left < heap.size() &&
+            if(left < (int)heap.size() &&
                heap[left].priority > heap[largest].priority)
             {
                 largest = left;
             }
 
-            if(right < heap.size() &&
+            if(right < (int)heap.size() &&
                heap[right].priority > heap[largest].priority)
             {
                 largest = right;
@@ -53,7 +64,7 @@ private :
             if(largest == index)
                 break;
 
-            std::swap(heap[index], heap[largest]);
+            swapNodes(index, largest);
 
             index = largest;
         }
@@ -70,21 +81,60 @@ public :
 
     int Size() const
     {
-        return heap.size();
+        return (int)heap.size();
     }
 
-    void Clear()
+    bool Contains(const T& key) const
     {
-        heap.clear();
+        return position.Contains(key);
+    }
+
+    int GetPriority(const T& key) const
+    {
+        int index = position.Get(key);
+
+        return heap[index].priority;
     }
 
     void Insert(const T& value, int priority)
     {
+        if(position.Contains(value))
+        {
+            UpdatePriority(value, priority);
+
+            return;
+        }
+
         heap.push_back(
             HeapNode<T>(value, priority)
         );
 
-        HeapifyUp(heap.size()-1);
+        int index = (int)heap.size() - 1;
+
+        position.Insert(value, index);
+
+        HeapifyUp(index);
+    }
+
+    void UpdatePriority(const T& key, int newPriority)
+    {
+        if(!position.Contains(key))
+        {
+            Insert(key, newPriority);
+
+            return;
+        }
+
+        int index = position.Get(key);
+
+        int oldPriority = heap[index].priority;
+
+        heap[index].priority = newPriority;
+
+        if(newPriority > oldPriority)
+            HeapifyUp(index);
+        else if(newPriority < oldPriority)
+            HeapifyDown(index);
     }
 
     HeapNode<T> Peek() const
@@ -102,16 +152,39 @@ public :
 
         HeapNode<T> root = heap.front();
 
+        position.Remove(root.data);
+
         heap[0] = heap.back();
 
         heap.pop_back();
 
         if(!heap.empty())
         {
+            position.Insert(heap[0].data, 0);
+
             HeapifyDown(0);
         }
 
         return root;
+    }
+
+    std::vector<HeapNode<T>> TopN(int count) const
+    {
+        MaxHeap<T>* self = const_cast<MaxHeap<T>*>(this);
+
+        std::vector<HeapNode<T>> extracted;
+
+        while(!self->IsEmpty() && (int)extracted.size() < count)
+        {
+            extracted.push_back(self->ExtractMax());
+        }
+
+        for(const HeapNode<T>& node : extracted)
+        {
+            self->Insert(node.data, node.priority);
+        }
+
+        return extracted;
     }
 
     void Print() const

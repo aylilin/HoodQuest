@@ -5,11 +5,15 @@
 #include <utility>
 
 #include "../DataStructures/BST.h"
+#include "../DataStructures/MaxHeap.h"
 
 class ScoreManager
 {
 private :
+   
     BST<std::string, int> scores;
+
+    MaxHeap<std::string> ranking;
 
 public :
     ScoreManager();

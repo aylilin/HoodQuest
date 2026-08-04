@@ -1,7 +1,5 @@
 #include "ScoreManager.h"
 
-#include "../DataStructures/MaxHeap.h"
-
 ScoreManager::ScoreManager()
 {
 }
@@ -9,6 +7,10 @@ ScoreManager::ScoreManager()
 void ScoreManager::setScore(const std::string& username, int score)
 {
     scores.Insert(username, score);
+
+    // Keep the ranking heap in sync the moment the score changes,
+    // instead of rebuilding it whenever the leaderboard is read.
+    ranking.Insert(username, score);
 }
 
 void ScoreManager::addToScore(const std::string& username, int delta)
@@ -20,7 +22,11 @@ void ScoreManager::addToScore(const std::string& username, int delta)
         current = scores.Get(username);
     }
 
-    scores.Insert(username, current + delta);
+    int updated = current + delta;
+
+    scores.Insert(username, updated);
+
+    ranking.Insert(username, updated);
 }
 
 bool ScoreManager::hasUser(const std::string& username) const
@@ -35,27 +41,13 @@ int ScoreManager::getScore(const std::string& username) const
 
 std::vector<std::pair<std::string,int>> ScoreManager::getTopPlayers(int count) const
 {
-    
-    std::vector<std::pair<std::string,int>> all = scores.InorderTraversal();
-
-    MaxHeap<std::string> heap;
-
-    for(const auto& entry : all)
-    {
-        heap.Insert(entry.first, entry.second);
-    }
+    std::vector<HeapNode<std::string>> topNodes = ranking.TopN(count);
 
     std::vector<std::pair<std::string,int>> top;
 
-    int extracted = 0;
-
-    while(!heap.IsEmpty() && extracted < count)
+    for(const HeapNode<std::string>& node : topNodes)
     {
-        HeapNode<std::string> node = heap.ExtractMax();
-
         top.push_back(std::make_pair(node.data, node.priority));
-
-        extracted++;
     }
 
     return top;
