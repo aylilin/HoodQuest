@@ -184,6 +184,31 @@ void Menu::showTopPlayer() const
         << std::endl;
 }
 
+void Menu::searchPlayerScore() const
+{
+    std::string username;
+
+    std::cout << "Enter the username to look up: ";
+
+    std::cin >> username;
+
+    if(!std::cin)
+        return;
+
+    
+    if(scoreManager.hasUser(username))
+    {
+        std::cout
+            << username << "'s score: "
+            << scoreManager.getScore(username)
+            << std::endl;
+    }
+    else
+    {
+        std::cout << "No such user exists." << std::endl;
+    }
+}
+
 void Menu::updateUserScore(const std::string& username, int delta)
 {
     UserRecord record = userTable.Get(username);
@@ -237,7 +262,7 @@ void Menu::playGame(const std::string& username)
         printState(engine);
 
         std::cout
-            << "Enter your move (destination letter, or u for Undo): ";
+            << "Enter your move (destination letter, u for Undo, a for A* suggestion): ";
 
         std::string input;
 
@@ -259,6 +284,25 @@ void Menu::playGame(const std::string& username)
             {
                 std::cout << "Undo is not available right now." << std::endl;
             }
+
+            continue;
+        }
+
+        if(input == "a" || input == "A")
+        {
+            std::vector<int> path = engine.getSuggestedPathAStar();
+
+            std::cout << "Suggested path (A*): ";
+
+            for(size_t i = 0; i < path.size(); i++)
+            {
+                std::cout << label(path[i]);
+
+                if(i != path.size() - 1)
+                    std::cout << " -> ";
+            }
+
+            std::cout << std::endl;
 
             continue;
         }
@@ -344,7 +388,8 @@ void Menu::run()
         std::cout << "Welcome to HoodQuest!" << std::endl;
         std::cout << "1. Create a new account" << std::endl;
         std::cout << "2. Log in to an existing account" << std::endl;
-        std::cout << "3. Exit" << std::endl;
+        std::cout << "3. Search a player's score" << std::endl;
+        std::cout << "4. Exit" << std::endl;
         std::cout << "Choice: ";
 
         std::string choice;
@@ -371,6 +416,10 @@ void Menu::run()
             }
         }
         else if(choice == "3")
+        {
+            searchPlayerScore();
+        }
+        else if(choice == "4")
         {
             exitRequested = true;
         }

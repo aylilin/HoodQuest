@@ -1,6 +1,6 @@
 #include "ScoreManager.h"
 
-#include "../DataStructures/MinHeap.h"
+#include "../DataStructures/MaxHeap.h"
 
 ScoreManager::ScoreManager()
 {
@@ -35,14 +35,14 @@ int ScoreManager::getScore(const std::string& username) const
 
 std::vector<std::pair<std::string,int>> ScoreManager::getTopPlayers(int count) const
 {
+    
     std::vector<std::pair<std::string,int>> all = scores.InorderTraversal();
 
-   
-    MinHeap<std::string> heap;
+    MaxHeap<std::string> heap;
 
     for(const auto& entry : all)
     {
-        heap.Insert(entry.first, -entry.second);
+        heap.Insert(entry.first, entry.second);
     }
 
     std::vector<std::pair<std::string,int>> top;
@@ -51,11 +51,9 @@ std::vector<std::pair<std::string,int>> ScoreManager::getTopPlayers(int count) c
 
     while(!heap.IsEmpty() && extracted < count)
     {
-        HeapNode<std::string> node = heap.ExtractMin();
+        HeapNode<std::string> node = heap.ExtractMax();
 
-        int score = -node.priority;
-
-        top.push_back(std::make_pair(node.data, score));
+        top.push_back(std::make_pair(node.data, node.priority));
 
         extracted++;
     }

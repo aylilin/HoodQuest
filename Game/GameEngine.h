@@ -50,6 +50,9 @@ public:
 
     int getSuggestedNextMove() const;
 
+   
+    std::vector<int> getSuggestedPathAStar() const;
+
     bool isValidMove(int destination) const;
 
     bool canUndo() const;

@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 
 #include "../Algorithms/Dijkstra.h"
+#include "../Algorithms/AStar.h"
 #include "../Algorithms/BFS.h"
 
 GameEngine::GameEngine(
@@ -35,6 +36,15 @@ int GameEngine::getSuggestedNextMove() const
         return suggestedPath[1];
 
     return state.getPlayer().getPosition();
+}
+
+std::vector<int> GameEngine::getSuggestedPathAStar() const
+{
+    return AStar::shortestPath(
+        graph,
+        state.getPlayer().getPosition(),
+        goalVertex
+    );
 }
 
 bool GameEngine::isValidMove(int destination) const
@@ -95,13 +105,8 @@ TurnResult GameEngine::playTurn(int destination)
     if(!isValidMove(destination))
         return TurnResult::InvalidMove;
 
-    // Save the state at the start of this turn so it can be
-    // restored later if the player calls Undo().
     history.Push(state);
 
-    // Score depends on whether the chosen move matches Dijkstra's
-    // suggested next step (computed from the position we are in
-    // right now, before moving).
     int scoreDelta = 1;
 
     if(suggestedPath.size() > 1 && suggestedPath[1] == destination)
@@ -118,7 +123,6 @@ TurnResult GameEngine::playTurn(int destination)
 
     state.increaseMove();
 
-    // Reaching the goal wins immediately.
     if(player.getPosition() == goalVertex)
     {
         Player winner = state.getPlayer();
@@ -132,8 +136,7 @@ TurnResult GameEngine::playTurn(int destination)
         return TurnResult::PlayerWon;
     }
 
-    // Walking onto the wolf's current tile loses immediately;
-    // we must not wait for the wolf to move.
+   
     if(checkCollision())
     {
         state.finishGame();
@@ -141,7 +144,7 @@ TurnResult GameEngine::playTurn(int destination)
         return TurnResult::PlayerLost;
     }
 
-    // Wolf's turn: roll the dice, move only on an even result.
+   
     runWolfTurn();
 
     if(checkCollision())
@@ -151,8 +154,7 @@ TurnResult GameEngine::playTurn(int destination)
         return TurnResult::PlayerLost;
     }
 
-    // Recompute the suggestion from the new position for the
-    // next call to getSuggestedPath()/getSuggestedNextMove().
+    
     computeSuggestedPath();
 
     return TurnResult::Continue;
@@ -169,7 +171,7 @@ bool GameEngine::undo()
 
     Player player = previous.getPlayer();
 
-    // Two-point penalty applied on top of the restored score.
+
     player.addScore(-2);
 
     previous.setPlayer(player);

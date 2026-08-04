@@ -42,6 +42,9 @@ private:
 
     void showTopPlayer() const;
 
+    
+    void searchPlayerScore() const;
+
     void updateUserScore(const std::string& username, int delta);
 
     void playGame(const std::string& username);
