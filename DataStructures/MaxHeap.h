@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <algorithm>
 
 #include "HeapNode.h"
 #include "HashTable.h"
@@ -170,21 +171,21 @@ public :
 
     std::vector<HeapNode<T>> TopN(int count) const
     {
-        MaxHeap<T>* self = const_cast<MaxHeap<T>*>(this);
+        std::vector<HeapNode<T>> copy = heap;
 
-        std::vector<HeapNode<T>> extracted;
+        int n = std::min(count, (int)copy.size());
 
-        while(!self->IsEmpty() && (int)extracted.size() < count)
-        {
-            extracted.push_back(self->ExtractMax());
-        }
+        std::partial_sort(
+            copy.begin(),
+            copy.begin() + n,
+            copy.end(),
+            [](const HeapNode<T>& a, const HeapNode<T>& b)
+            {
+                return a.priority > b.priority;
+            }
+        );
 
-        for(const HeapNode<T>& node : extracted)
-        {
-            self->Insert(node.data, node.priority);
-        }
-
-        return extracted;
+        return std::vector<HeapNode<T>>(copy.begin(), copy.begin() + n);
     }
 
     void Print() const
